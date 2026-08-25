@@ -49,7 +49,7 @@ export default function HelpModal({ onClose }) {
                 >
                   <div className="session-head">
                     <span className="session-ue">AI51</span>
-                    <span className="session-type">TP</span>
+                    <span className="type-badge" style={{ background: "#d9720b" }}>TP</span>
                   </div>
                   <div className="session-time">13h00–16h00</div>
                   <div className="session-week">
@@ -69,7 +69,7 @@ export default function HelpModal({ onClose }) {
                 >
                   <div className="session-head">
                     <span className="session-ue">AI51</span>
-                    <span className="session-type">TP</span>
+                    <span className="type-badge" style={{ background: "#d9720b" }}>TP</span>
                   </div>
                   <div className="session-time">13h00–16h00</div>
                   <div className="session-week">

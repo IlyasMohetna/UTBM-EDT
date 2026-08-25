@@ -2,7 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   DAY_LABELS,
   DAY_ORDER,
+  KNOWN_TYPES,
   analyzeUe,
+  colorForType,
   colorForUe,
   computeVisibleSessions,
   countUnresolvedF2,
@@ -325,6 +327,15 @@ export default function App() {
               ))}
             </div>
 
+            <div className="type-legend">
+              {KNOWN_TYPES.map((t) => (
+                <span key={t} className="legend-item">
+                  <span className="legend-dot" style={{ background: colorForType(t) }} />
+                  {t}
+                </span>
+              ))}
+            </div>
+
             {unresolvedF2 > 0 && (
               <div className="warning-banner">
                 {unresolvedF2} créneau{unresolvedF2 > 1 ? 'x' : ''} en fréquence 2 (une semaine sur deux) sans
@@ -441,7 +452,9 @@ function SessionBlock({ s, startMin, weekTag, onTagWeek }) {
     >
       <div className="session-head">
         <span className="session-ue">{s.ueCode}</span>
-        <span className="session-type">{s.type}</span>
+        <span className="type-badge" style={{ background: colorForType(s.type) }} title={s.typeLabel}>
+          {s.type}
+        </span>
       </div>
       <div className="session-time">
         {minutesToLabel(s.debut)}–{minutesToLabel(s.debut + s.duree)}

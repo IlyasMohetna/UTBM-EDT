@@ -62,6 +62,16 @@ export function colorForUe(code) {
   return `hsl(${hue}, 62%, 46%)`
 }
 
+const TYPE_COLORS = { CM: '#2f6fed', TD: '#1f9d55', TP: '#d9720b' }
+
+// Fixed color per activity type (CM/TD/TP), independent of the UE color, so
+// the kind of session is recognizable at a glance even in a narrow lane.
+export function colorForType(type) {
+  return TYPE_COLORS[type] ?? '#6b7280'
+}
+
+export const KNOWN_TYPES = Object.keys(TYPE_COLORS)
+
 // For each UE, figure out which activity types have more than one "numero"
 // (i.e. the class is split into groups the student must pick between).
 export function analyzeUe(ue) {
