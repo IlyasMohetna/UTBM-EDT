@@ -21,6 +21,7 @@ import {
   saveCombos,
   saveExtraUes,
 } from './fileLoading.js'
+import HelpModal from './HelpModal.jsx'
 
 const PX_PER_MIN = 1.1
 const DEFAULT_START = 8 * 60
@@ -56,6 +57,7 @@ export default function App() {
 
   const [dragActive, setDragActive] = useState(false)
   const [error, setError] = useState(null)
+  const [helpOpen, setHelpOpen] = useState(false)
   const filesInputRef = useRef(null)
   const dragCounter = useRef(0)
 
@@ -248,6 +250,9 @@ export default function App() {
       <header className="topbar">
         <h1>Mon EDT UTBM</h1>
         <div className="topbar-actions">
+          <button className="ghost help-btn" onClick={() => setHelpOpen(true)} title="Aide : semaines A/B, fréquence, groupes...">
+            ?
+          </button>
           <button
             className="ghost"
             onClick={() => filesInputRef.current.click()}
@@ -410,6 +415,8 @@ export default function App() {
           )}
         </>
       )}
+
+      {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
     </div>
   )
 }
