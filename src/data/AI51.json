@@ -1,0 +1,117 @@
+[
+  {
+    "activite": {
+      "id": 46,
+      "libelleCourt": "TD",
+      "libelle": "Travaux dirigés"
+    },
+    "effectif": 0,
+    "effectifA": 0,
+    "effectifB": 0,
+    "frequence": "F1",
+    "id": 14435,
+    "listeSeance": [
+      {
+        "id": 14365,
+        "numero": 1,
+        "jour": "MA",
+        "debutMinute": 615,
+        "dureeMinute": 120
+      }
+    ],
+    "nbPlace": 28,
+    "numero": 1
+  },
+  {
+    "activite": {
+      "id": 45,
+      "libelleCourt": "CM",
+      "libelle": "Cours magistraux"
+    },
+    "effectif": 0,
+    "effectifA": 0,
+    "effectifB": 0,
+    "frequence": "F1",
+    "id": 14437,
+    "listeSeance": [
+      {
+        "id": 14367,
+        "numero": 1,
+        "jour": "MA",
+        "debutMinute": 480,
+        "dureeMinute": 120
+      }
+    ],
+    "nbPlace": 56,
+    "numero": 1
+  },
+  {
+    "activite": {
+      "id": 47,
+      "libelleCourt": "TP",
+      "libelle": "Travaux pratiques"
+    },
+    "effectif": 0,
+    "effectifA": 0,
+    "effectifB": 0,
+    "frequence": "F2",
+    "id": 14434,
+    "listeSeance": [
+      {
+        "id": 14364,
+        "numero": 1,
+        "jour": "ME",
+        "debutMinute": 780,
+        "dureeMinute": 180
+      }
+    ],
+    "nbPlace": 28,
+    "numero": 2
+  },
+  {
+    "activite": {
+      "id": 47,
+      "libelleCourt": "TP",
+      "libelle": "Travaux pratiques"
+    },
+    "effectif": 0,
+    "effectifA": 0,
+    "effectifB": 0,
+    "frequence": "F2",
+    "id": 14433,
+    "listeSeance": [
+      {
+        "id": 14363,
+        "numero": 1,
+        "jour": "MA",
+        "debutMinute": 780,
+        "dureeMinute": 180
+      }
+    ],
+    "nbPlace": 28,
+    "numero": 1
+  },
+  {
+    "activite": {
+      "id": 46,
+      "libelleCourt": "TD",
+      "libelle": "Travaux dirigés"
+    },
+    "effectif": 0,
+    "effectifA": 0,
+    "effectifB": 0,
+    "frequence": "F1",
+    "id": 14436,
+    "listeSeance": [
+      {
+        "id": 14366,
+        "numero": 1,
+        "jour": "ME",
+        "debutMinute": 615,
+        "dureeMinute": 120
+      }
+    ],
+    "nbPlace": 28,
+    "numero": 2
+  }
+]
