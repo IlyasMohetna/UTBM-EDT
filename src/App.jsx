@@ -7,11 +7,13 @@ import {
   colorForType,
   colorForUe,
   computeVisibleSessions,
+  computeWeeklyStats,
   countUnresolvedF2,
   layoutDay,
   minutesToLabel,
   parseUeFile,
 } from './timetable.js'
+import StatsPanel from './StatsPanel.jsx'
 import {
   emptyCombo,
   filesFromDataTransfer,
@@ -203,6 +205,17 @@ export default function App() {
   const visibleSessions = useMemo(() => computeVisibleSessions(ues, activeCombo), [ues, activeCombo])
   const unresolvedF2 = useMemo(() => countUnresolvedF2(ues, activeCombo), [ues, activeCombo])
 
+  // Stats always reflect the whole combo (not the Semaine A/B view filter) —
+  // an average week has to see every session at least once to weight it right.
+  const statsSessions = useMemo(
+    () => computeVisibleSessions(ues, { ...activeCombo, weekFilter: 'ALL' }),
+    [ues, activeCombo],
+  )
+  const stats = useMemo(
+    () => computeWeeklyStats(statsSessions, activeCombo.weekTags),
+    [statsSessions, activeCombo.weekTags],
+  )
+
   const days = useMemo(() => {
     const present = new Set(visibleSessions.map((s) => s.jour))
     const base = ['LU', 'MA', 'ME', 'JE', 'VE']
@@ -343,6 +356,8 @@ export default function App() {
               </div>
             )}
           </div>
+
+          {ues.length > 0 && <StatsPanel stats={stats} comboName={activeCombo.name} />}
 
           <div className="ue-catalog">
             {catalog.map((ue) => {

@@ -51,6 +51,55 @@ export function minutesToLabel(m) {
   return `${h}h${mm.toString().padStart(2, '0')}`
 }
 
+// Same "8h30" style, but for a duration/total rather than a clock time —
+// drops the minutes when they're exactly 0 ("12h" instead of "12h00").
+export function formatDuration(minutes) {
+  const rounded = Math.round(minutes)
+  const h = Math.floor(rounded / 60)
+  const mm = rounded % 60
+  return mm === 0 ? `${h}h` : `${h}h${mm.toString().padStart(2, '0')}`
+}
+
+// The real weekly hour count: F1 slots happen every week (full weight), F2
+// slots happen one week out of two (half weight on average). Also splits
+// F1/F2 minutes by A/B tag so a per-week breakdown is possible once tagged.
+export function computeWeeklyStats(sessions, weekTags) {
+  let f1Minutes = 0
+  let f2Minutes = 0
+  let weekAMinutes = 0
+  let weekBMinutes = 0
+  let untaggedF2Minutes = 0
+  const byType = {}
+
+  for (const s of sessions) {
+    const isF2 = s.frequence === 'F2'
+    if (isF2) {
+      f2Minutes += s.duree
+      const tag = weekTags[s.key]
+      if (tag === 'A') weekAMinutes += s.duree
+      else if (tag === 'B') weekBMinutes += s.duree
+      else untaggedF2Minutes += s.duree
+    } else {
+      f1Minutes += s.duree
+      weekAMinutes += s.duree
+      weekBMinutes += s.duree
+    }
+    const contribution = isF2 ? s.duree / 2 : s.duree
+    byType[s.type] = (byType[s.type] ?? 0) + contribution
+  }
+
+  return {
+    averageWeekly: f1Minutes + f2Minutes / 2,
+    f1Minutes,
+    f2Minutes,
+    weekAMinutes,
+    weekBMinutes,
+    untaggedF2Minutes,
+    byType,
+    sessionCount: sessions.length,
+  }
+}
+
 // Consistent, pleasant color per UE code.
 export function colorForUe(code) {
   let hash = 0
