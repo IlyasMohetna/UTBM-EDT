@@ -1,0 +1,94 @@
+[
+  {
+    "activite": {
+      "id": 46,
+      "libelleCourt": "TD",
+      "libelle": "Travaux dirigés"
+    },
+    "effectif": 0,
+    "effectifA": 0,
+    "effectifB": 0,
+    "frequence": "F1",
+    "id": 14545,
+    "listeSeance": [
+      {
+        "id": 14475,
+        "numero": 1,
+        "jour": "LU",
+        "debutMinute": 615,
+        "dureeMinute": 120
+      }
+    ],
+    "nbPlace": 28,
+    "numero": 1
+  },
+  {
+    "activite": {
+      "id": 45,
+      "libelleCourt": "CM",
+      "libelle": "Cours magistraux"
+    },
+    "effectif": 0,
+    "effectifA": 0,
+    "effectifB": 0,
+    "frequence": "F1",
+    "id": 14548,
+    "listeSeance": [
+      {
+        "id": 14478,
+        "numero": 1,
+        "jour": "LU",
+        "debutMinute": 480,
+        "dureeMinute": 120
+      }
+    ],
+    "nbPlace": 28,
+    "numero": 1
+  },
+  {
+    "activite": {
+      "id": 47,
+      "libelleCourt": "TP",
+      "libelle": "Travaux pratiques"
+    },
+    "effectif": 0,
+    "effectifA": 0,
+    "effectifB": 0,
+    "frequence": "F1",
+    "id": 14547,
+    "listeSeance": [
+      {
+        "id": 14477,
+        "numero": 1,
+        "jour": "VE",
+        "debutMinute": 840,
+        "dureeMinute": 120
+      }
+    ],
+    "nbPlace": 14,
+    "numero": 2
+  },
+  {
+    "activite": {
+      "id": 47,
+      "libelleCourt": "TP",
+      "libelle": "Travaux pratiques"
+    },
+    "effectif": 0,
+    "effectifA": 0,
+    "effectifB": 0,
+    "frequence": "F1",
+    "id": 14546,
+    "listeSeance": [
+      {
+        "id": 14476,
+        "numero": 1,
+        "jour": "LU",
+        "debutMinute": 840,
+        "dureeMinute": 120
+      }
+    ],
+    "nbPlace": 14,
+    "numero": 1
+  }
+]
