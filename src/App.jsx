@@ -18,14 +18,17 @@ import {
   emptyCombo,
   filesFromDataTransfer,
   loadStoredActiveComboId,
+  loadStoredCalendarSettings,
   loadStoredCombos,
   loadStoredExtraUes,
   makeId,
   saveActiveComboId,
+  saveCalendarSettings,
   saveCombos,
   saveExtraUes,
 } from './fileLoading.js'
 import HelpModal from './HelpModal.jsx'
+import IcsExportModal from './IcsExportModal.jsx'
 
 const PX_PER_MIN = 1.1
 const DEFAULT_START = 8 * 60
@@ -62,12 +65,15 @@ export default function App() {
   const [dragActive, setDragActive] = useState(false)
   const [error, setError] = useState(null)
   const [helpOpen, setHelpOpen] = useState(false)
+  const [icsOpen, setIcsOpen] = useState(false)
+  const [calendarSettings, setCalendarSettings] = useState(loadStoredCalendarSettings)
   const filesInputRef = useRef(null)
   const dragCounter = useRef(0)
 
   useEffect(() => saveExtraUes(extraUes), [extraUes])
   useEffect(() => saveCombos(combos), [combos])
   useEffect(() => saveActiveComboId(activeComboId), [activeComboId])
+  useEffect(() => saveCalendarSettings(calendarSettings), [calendarSettings])
 
   const catalog = useMemo(() => {
     const map = new Map(bundledUes.map((u) => [u.code, { ...u, source: 'bundled' }]))
@@ -268,6 +274,11 @@ export default function App() {
           <button className="ghost help-btn" onClick={() => setHelpOpen(true)} title="Aide : semaines A/B, fréquence, groupes...">
             ?
           </button>
+          {ues.length > 0 && (
+            <button className="ghost" onClick={() => setIcsOpen(true)}>
+              📅 Exporter iCal
+            </button>
+          )}
           <button
             className="ghost"
             onClick={() => filesInputRef.current.click()}
@@ -443,6 +454,16 @@ export default function App() {
       )}
 
       {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
+      {icsOpen && (
+        <IcsExportModal
+          onClose={() => setIcsOpen(false)}
+          sessions={statsSessions}
+          weekTags={activeCombo.weekTags}
+          comboName={activeCombo.name}
+          calendarSettings={calendarSettings}
+          onSaveSettings={setCalendarSettings}
+        />
+      )}
     </div>
   )
 }

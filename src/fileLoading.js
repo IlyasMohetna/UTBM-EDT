@@ -99,3 +99,21 @@ export function saveCombos(combos) {
 export function saveActiveComboId(id) {
   localStorage.setItem(ACTIVE_COMBO_KEY, id)
 }
+
+const CALENDAR_KEY = 'utbm-edt-calendar-settings'
+
+// The real semester calendar (needed to turn "toutes les semaines" / "une
+// semaine sur deux" into actual dates for the .ics export). Same for every
+// combo, so it's stored on its own rather than per-combo.
+export function loadStoredCalendarSettings() {
+  try {
+    const raw = localStorage.getItem(CALENDAR_KEY)
+    return raw ? JSON.parse(raw) : { startMonday: '', weekTypeAtStart: 'A', endDate: '' }
+  } catch {
+    return { startMonday: '', weekTypeAtStart: 'A', endDate: '' }
+  }
+}
+
+export function saveCalendarSettings(settings) {
+  localStorage.setItem(CALENDAR_KEY, JSON.stringify(settings))
+}

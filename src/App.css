@@ -9,6 +9,8 @@
   --danger-text: #9c2b23;
   --warning-bg: #fff6e0;
   --warning-text: #7a5b00;
+  --success-bg: #e8f7ee;
+  --success-text: #196c3e;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,6 +25,8 @@
     --danger-text: #f2a49c;
     --warning-bg: #362c0f;
     --warning-text: #e8c766;
+    --success-bg: #123425;
+    --success-text: #7fd9a4;
   }
 }
 
@@ -200,6 +204,50 @@ button.ghost {
   padding: 0.4rem 0.8rem;
   border-radius: 0.5rem;
   font-size: 0.82rem;
+}
+
+.success-banner {
+  background: var(--success-bg);
+  color: var(--success-text);
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.form-row input[type='date'] {
+  font: inherit;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background: var(--panel);
+  color: var(--text);
+}
+
+.segmented {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.export-btn {
+  align-self: flex-start;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  padding: 0.55rem 1rem;
+}
+
+.export-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .combo-bar {
