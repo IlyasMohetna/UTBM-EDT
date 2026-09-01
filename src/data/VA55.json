@@ -1,0 +1,94 @@
+[
+    {
+        "activite": {
+            "id": 46,
+            "libelleCourt": "TD",
+            "libelle": "Travaux dirigés"
+        },
+        "effectif": 0,
+        "effectifA": 0,
+        "effectifB": 0,
+        "frequence": "F1",
+        "id": 14556,
+        "listeSeance": [
+            {
+                "id": 14486,
+                "numero": 1,
+                "jour": "JE",
+                "debutMinute": 480,
+                "dureeMinute": 120
+            }
+        ],
+        "nbPlace": 28,
+        "numero": 1
+    },
+    {
+        "activite": {
+            "id": 47,
+            "libelleCourt": "TP",
+            "libelle": "Travaux pratiques"
+        },
+        "effectif": 0,
+        "effectifA": 0,
+        "effectifB": 0,
+        "frequence": "F1",
+        "id": 14557,
+        "listeSeance": [
+            {
+                "id": 14487,
+                "numero": 1,
+                "jour": "MA",
+                "debutMinute": 780,
+                "dureeMinute": 180
+            }
+        ],
+        "nbPlace": 14,
+        "numero": 1
+    },
+    {
+        "activite": {
+            "id": 45,
+            "libelleCourt": "CM",
+            "libelle": "Cours magistraux"
+        },
+        "effectif": 0,
+        "effectifA": 0,
+        "effectifB": 0,
+        "frequence": "F1",
+        "id": 14559,
+        "listeSeance": [
+            {
+                "id": 14489,
+                "numero": 1,
+                "jour": "MA",
+                "debutMinute": 480,
+                "dureeMinute": 120
+            }
+        ],
+        "nbPlace": 28,
+        "numero": 1
+    },
+    {
+        "activite": {
+            "id": 47,
+            "libelleCourt": "TP",
+            "libelle": "Travaux pratiques"
+        },
+        "effectif": 0,
+        "effectifA": 0,
+        "effectifB": 0,
+        "frequence": "F1",
+        "id": 14558,
+        "listeSeance": [
+            {
+                "id": 14488,
+                "numero": 1,
+                "jour": "LU",
+                "debutMinute": 615,
+                "dureeMinute": 180
+            }
+        ],
+        "nbPlace": 14,
+        "numero": 2
+    }
+]

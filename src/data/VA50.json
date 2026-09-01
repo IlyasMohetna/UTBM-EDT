@@ -1,0 +1,25 @@
+[
+    {
+        "activite": {
+            "id": 46,
+            "libelleCourt": "TD",
+            "libelle": "Travaux dirigés"
+        },
+        "effectif": 0,
+        "effectifA": 0,
+        "effectifB": 0,
+        "frequence": "F1",
+        "id": 14466,
+        "listeSeance": [
+            {
+                "id": 14396,
+                "numero": 1,
+                "jour": "LU",
+                "debutMinute": 480,
+                "dureeMinute": 120
+            }
+        ],
+        "nbPlace": 28,
+        "numero": 1
+    }
+]
