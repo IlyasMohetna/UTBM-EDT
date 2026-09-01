@@ -13,7 +13,7 @@ import {
   minutesToLabel,
   parseUeFile,
 } from './timetable.js'
-import StatsPanel from './StatsPanel.jsx'
+import StatsSlideover from './StatsSlideover.jsx'
 import {
   emptyCombo,
   filesFromDataTransfer,
@@ -29,6 +29,7 @@ import {
 } from './fileLoading.js'
 import HelpModal from './HelpModal.jsx'
 import IcsExportModal from './IcsExportModal.jsx'
+import ImportModal from './ImportModal.jsx'
 
 const PX_PER_MIN = 1.1
 const DEFAULT_START = 8 * 60
@@ -66,6 +67,8 @@ export default function App() {
   const [error, setError] = useState(null)
   const [helpOpen, setHelpOpen] = useState(false)
   const [icsOpen, setIcsOpen] = useState(false)
+  const [importOpen, setImportOpen] = useState(false)
+  const [statsOpen, setStatsOpen] = useState(false)
   const [calendarSettings, setCalendarSettings] = useState(loadStoredCalendarSettings)
   const filesInputRef = useRef(null)
   const dragCounter = useRef(0)
@@ -108,6 +111,29 @@ export default function App() {
       for (const p of parsed) map.set(p.code, p)
       return Array.from(map.values()).sort((a, b) => a.code.localeCompare(b.code))
     })
+  }
+
+  // Used by the "coller la réponse /groupe" flow in ImportModal — same
+  // parser as the file path, just fed a code + pasted text instead of a File.
+  function importPastedUe(code, jsonText) {
+    const trimmedCode = code.trim().toUpperCase()
+    if (!trimmedCode) return { ok: false, message: 'Indique un code UE (ex: AI50).' }
+    const ue = parseUeFile(`${trimmedCode}.json`, jsonText)
+    if (!ue) {
+      return {
+        ok: false,
+        message: "JSON invalide — vérifie que tu as bien copié toute la réponse de la requête /groupe.",
+      }
+    }
+    setExtraUes((prev) => {
+      const map = new Map(prev.map((u) => [u.code, u]))
+      map.set(ue.code, ue)
+      return Array.from(map.values()).sort((a, b) => a.code.localeCompare(b.code))
+    })
+    return {
+      ok: true,
+      message: `UE "${ue.code}" ajoutée au catalogue (${ue.sessions.length} créneau${ue.sessions.length > 1 ? 'x' : ''}).`,
+    }
   }
 
   function handleDrop(e) {
@@ -281,8 +307,8 @@ export default function App() {
           )}
           <button
             className="ghost"
-            onClick={() => filesInputRef.current.click()}
-            title="Importer d'autres fichiers UE en plus de ceux du dossier data/"
+            onClick={() => setImportOpen(true)}
+            title="Importer d'autres UE en plus de celles du dossier data/"
           >
             + Importer des UE
           </button>
@@ -360,6 +386,12 @@ export default function App() {
               ))}
             </div>
 
+            {ues.length > 0 && (
+              <button className="ghost stats-toggle" onClick={() => setStatsOpen(true)}>
+                📊 Statistiques
+              </button>
+            )}
+
             {unresolvedF2 > 0 && (
               <div className="warning-banner">
                 {unresolvedF2} créneau{unresolvedF2 > 1 ? 'x' : ''} en fréquence 2 (une semaine sur deux) sans
@@ -367,8 +399,6 @@ export default function App() {
               </div>
             )}
           </div>
-
-          {ues.length > 0 && <StatsPanel stats={stats} comboName={activeCombo.name} />}
 
           <div className="ue-catalog">
             {catalog.map((ue) => {
@@ -464,6 +494,14 @@ export default function App() {
           onSaveSettings={setCalendarSettings}
         />
       )}
+      {importOpen && (
+        <ImportModal
+          onClose={() => setImportOpen(false)}
+          onImportPaste={importPastedUe}
+          onOpenFilePicker={() => filesInputRef.current.click()}
+        />
+      )}
+      {statsOpen && <StatsSlideover onClose={() => setStatsOpen(false)} stats={stats} comboName={activeCombo.name} />}
     </div>
   )
 }
