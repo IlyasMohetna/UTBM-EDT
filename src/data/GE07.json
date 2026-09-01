@@ -1,0 +1,48 @@
+[
+    {
+        "activite": {
+            "id": 46,
+            "libelleCourt": "TD",
+            "libelle": "Travaux dirigés"
+        },
+        "effectif": 0,
+        "effectifA": 0,
+        "effectifB": 0,
+        "frequence": "F1",
+        "id": 14736,
+        "listeSeance": [
+            {
+                "id": 14666,
+                "numero": 1,
+                "jour": "MA",
+                "debutMinute": 975,
+                "dureeMinute": 120
+            }
+        ],
+        "nbPlace": 28,
+        "numero": 1
+    },
+    {
+        "activite": {
+            "id": 45,
+            "libelleCourt": "CM",
+            "libelle": "Cours magistraux"
+        },
+        "effectif": 0,
+        "effectifA": 0,
+        "effectifB": 0,
+        "frequence": "F1",
+        "id": 14737,
+        "listeSeance": [
+            {
+                "id": 14667,
+                "numero": 1,
+                "jour": "MA",
+                "debutMinute": 870,
+                "dureeMinute": 90
+            }
+        ],
+        "nbPlace": 28,
+        "numero": 1
+    }
+]
