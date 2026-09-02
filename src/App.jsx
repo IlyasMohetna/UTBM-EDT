@@ -194,6 +194,15 @@ export default function App() {
     updateActiveCombo((c) => ({ ...c, weekFilter: f }))
   }
 
+  function setRoom(sessionKey, room) {
+    updateActiveCombo((c) => {
+      const rooms = { ...c.rooms }
+      if (!room) delete rooms[sessionKey]
+      else rooms[sessionKey] = room
+      return { ...c, rooms }
+    })
+  }
+
   function addCombo() {
     const name = window.prompt('Nom de la nouvelle combinaison ?', `Combinaison ${combos.length + 1}`)
     if (name === null) return
@@ -473,6 +482,8 @@ export default function App() {
                         startMin={startMin}
                         weekTag={activeCombo.weekTags[s.key]}
                         onTagWeek={(tag) => setWeekTag(s.key, tag)}
+                        room={activeCombo.rooms[s.key]}
+                        onSetRoom={(room) => setRoom(s.key, room)}
                       />
                     ))}
                   </div>
@@ -489,6 +500,7 @@ export default function App() {
           onClose={() => setIcsOpen(false)}
           sessions={statsSessions}
           weekTags={activeCombo.weekTags}
+          rooms={activeCombo.rooms}
           comboName={activeCombo.name}
           calendarSettings={calendarSettings}
           onSaveSettings={setCalendarSettings}
@@ -506,12 +518,24 @@ export default function App() {
   )
 }
 
-function SessionBlock({ s, startMin, weekTag, onTagWeek }) {
+function SessionBlock({ s, startMin, weekTag, onTagWeek, room, onSetRoom }) {
   const top = (s.debut - startMin) * PX_PER_MIN
   const height = s.duree * PX_PER_MIN
   const width = 100 / s.totalLanes
   const left = width * s.lane
   const color = colorForUe(s.ueCode)
+  const [editingRoom, setEditingRoom] = useState(false)
+  const [roomDraft, setRoomDraft] = useState(room ?? '')
+
+  function startEditingRoom() {
+    setRoomDraft(room ?? '')
+    setEditingRoom(true)
+  }
+
+  function commitRoom() {
+    onSetRoom(roomDraft.trim())
+    setEditingRoom(false)
+  }
 
   return (
     <div
@@ -532,6 +556,30 @@ function SessionBlock({ s, startMin, weekTag, onTagWeek }) {
       </div>
       <div className="session-time">
         {minutesToLabel(s.debut)}–{minutesToLabel(s.debut + s.duree)}
+      </div>
+      <div className="session-room" onClick={(e) => e.stopPropagation()}>
+        {editingRoom ? (
+          <input
+            autoFocus
+            className="room-input"
+            value={roomDraft}
+            placeholder="ex: A101"
+            onChange={(e) => setRoomDraft(e.target.value)}
+            onBlur={commitRoom}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') commitRoom()
+              if (e.key === 'Escape') setEditingRoom(false)
+            }}
+          />
+        ) : room ? (
+          <button className="room-tag" onClick={startEditingRoom} title="Modifier la salle">
+            📍 {room}
+          </button>
+        ) : (
+          <button className="room-tag ghost-room" onClick={startEditingRoom}>
+            + salle
+          </button>
+        )}
       </div>
       {s.frequence === 'F2' && (
         <div className="session-week" onClick={(e) => e.stopPropagation()}>

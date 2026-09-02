@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { addWeeks, downloadIcs, generateIcs } from './ics.js'
 
-export default function IcsExportModal({ onClose, sessions, weekTags, comboName, calendarSettings, onSaveSettings }) {
+export default function IcsExportModal({ onClose, sessions, weekTags, rooms, comboName, calendarSettings, onSaveSettings }) {
   const [startMonday, setStartMonday] = useState(calendarSettings.startMonday)
   const [weekTypeAtStart, setWeekTypeAtStart] = useState(calendarSettings.weekTypeAtStart || 'A')
   const [endDate, setEndDate] = useState(calendarSettings.endDate)
@@ -29,6 +29,7 @@ export default function IcsExportModal({ onClose, sessions, weekTags, comboName,
     const { ics, skippedCount } = generateIcs({
       sessions,
       weekTags,
+      rooms,
       startMonday,
       weekTypeAtStart,
       endDate,

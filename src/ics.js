@@ -56,7 +56,7 @@ function foldLine(line) {
 //   with the matching A/B letter (relative to `weekTypeAtStart`, the letter
 //   of the very first week of `startMonday`). F2 sessions with no A/B tag
 //   yet are skipped (counted in `skippedCount`) since we can't place them.
-export function generateIcs({ sessions, weekTags, startMonday, weekTypeAtStart, endDate, calendarName }) {
+export function generateIcs({ sessions, weekTags, rooms, startMonday, weekTypeAtStart, endDate, calendarName }) {
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//UTBM-EDT//FR', 'CALSCALE:GREGORIAN']
   lines.push(`X-WR-CALNAME:${escapeIcs(calendarName)}`)
 
@@ -91,6 +91,7 @@ export function generateIcs({ sessions, weekTags, startMonday, weekTypeAtStart, 
     const rrule = isF2
       ? `FREQ=WEEKLY;INTERVAL=2;BYDAY=${ICS_DAY[s.jour]};UNTIL=${untilStr}`
       : `FREQ=WEEKLY;BYDAY=${ICS_DAY[s.jour]};UNTIL=${untilStr}`
+    const room = rooms?.[s.key]
 
     lines.push(
       'BEGIN:VEVENT',
@@ -101,8 +102,9 @@ export function generateIcs({ sessions, weekTags, startMonday, weekTypeAtStart, 
       `RRULE:${rrule}`,
       `SUMMARY:${escapeIcs(`${s.ueCode} ${s.type}`)}`,
       `DESCRIPTION:${escapeIcs(`${s.typeLabel}${weekNote}`)}`,
-      'END:VEVENT',
     )
+    if (room) lines.push(`LOCATION:${escapeIcs(room)}`)
+    lines.push('END:VEVENT')
   }
 
   lines.push('END:VCALENDAR')

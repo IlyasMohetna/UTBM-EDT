@@ -68,17 +68,21 @@ export function makeId() {
 }
 
 // A "combinaison" is a named, saved EDT: which UE codes are included, which
-// group (1/2) is picked per UE, and which A/B week each F2 (biweekly) slot
-// is tagged with. Nothing is selected by default — the user composes it.
+// group (1/2) is picked per UE, which A/B week each F2 (biweekly) slot is
+// tagged with, and which room each slot has been annotated with (the source
+// data has no room field, so this is filled in by hand). Nothing is
+// selected by default — the user composes it.
 export function emptyCombo(name) {
-  return { id: makeId(), name, selectedCodes: [], groups: {}, weekTags: {}, weekFilter: 'ALL' }
+  return { id: makeId(), name, selectedCodes: [], groups: {}, weekTags: {}, rooms: {}, weekFilter: 'ALL' }
 }
 
 export function loadStoredCombos() {
   try {
     const raw = localStorage.getItem(COMBOS_KEY)
     const combos = raw ? JSON.parse(raw) : []
-    return combos.length ? combos : [emptyCombo('Mon EDT')]
+    // Older saved combos predate the `rooms` field — backfill it.
+    const normalized = combos.map((c) => ({ rooms: {}, ...c }))
+    return normalized.length ? normalized : [emptyCombo('Mon EDT')]
   } catch {
     return [emptyCombo('Mon EDT')]
   }
