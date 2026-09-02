@@ -13,8 +13,10 @@
   --success-text: #196c3e;
 }
 
+/* System preference is only the fallback for a first visit — the theme
+   toggle sets [data-theme] explicitly afterwards and that always wins. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     --bg: #14161c;
     --panel: #1c1f28;
     --border: #2c303b;
@@ -28,6 +30,21 @@
     --success-bg: #123425;
     --success-text: #7fd9a4;
   }
+}
+
+:root[data-theme='dark'] {
+  --bg: #14161c;
+  --panel: #1c1f28;
+  --border: #2c303b;
+  --text: #eceef2;
+  --text-dim: #9aa1af;
+  --accent: #7d93ff;
+  --danger-bg: #3a1f1d;
+  --danger-text: #f2a49c;
+  --warning-bg: #362c0f;
+  --warning-text: #e8c766;
+  --success-bg: #123425;
+  --success-text: #7fd9a4;
 }
 
 * {

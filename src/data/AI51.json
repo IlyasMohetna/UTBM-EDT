@@ -16,7 +16,8 @@
         "numero": 1,
         "jour": "MA",
         "debutMinute": 615,
-        "dureeMinute": 120
+        "dureeMinute": 120,
+        "salle": "A105"
       }
     ],
     "nbPlace": 28,
@@ -39,7 +40,8 @@
         "numero": 1,
         "jour": "MA",
         "debutMinute": 480,
-        "dureeMinute": 120
+        "dureeMinute": 120,
+        "salle": "A101"
       }
     ],
     "nbPlace": 56,
@@ -62,7 +64,8 @@
         "numero": 1,
         "jour": "ME",
         "debutMinute": 780,
-        "dureeMinute": 180
+        "dureeMinute": 180,
+        "salle": "A209"
       }
     ],
     "nbPlace": 28,
@@ -85,7 +88,8 @@
         "numero": 1,
         "jour": "MA",
         "debutMinute": 780,
-        "dureeMinute": 180
+        "dureeMinute": 180,
+        "salle": "A209"
       }
     ],
     "nbPlace": 28,
@@ -108,7 +112,8 @@
         "numero": 1,
         "jour": "ME",
         "debutMinute": 615,
-        "dureeMinute": 120
+        "dureeMinute": 120,
+        "salle": "A103"
       }
     ],
     "nbPlace": 28,

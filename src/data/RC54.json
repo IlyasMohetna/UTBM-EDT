@@ -16,7 +16,8 @@
         "numero": 1,
         "jour": "JE",
         "debutMinute": 615,
-        "dureeMinute": 120
+        "dureeMinute": 120,
+        "salle": "A113"
       }
     ],
     "nbPlace": 28,
@@ -39,7 +40,8 @@
         "numero": 1,
         "jour": "JE",
         "debutMinute": 480,
-        "dureeMinute": 120
+        "dureeMinute": 120,
+        "salle": "A113"
       }
     ],
     "nbPlace": 28,
@@ -62,7 +64,8 @@
         "numero": 1,
         "jour": "VE",
         "debutMinute": 615,
-        "dureeMinute": 180
+        "dureeMinute": 180,
+        "salle": "H010"
       }
     ],
     "nbPlace": 28,

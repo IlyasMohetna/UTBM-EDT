@@ -16,7 +16,8 @@
         "numero": 1,
         "jour": "LU",
         "debutMinute": 615,
-        "dureeMinute": 120
+        "dureeMinute": 120,
+        "salle": "A218"
       }
     ],
     "nbPlace": 28,
@@ -39,7 +40,8 @@
         "numero": 1,
         "jour": "LU",
         "debutMinute": 480,
-        "dureeMinute": 120
+        "dureeMinute": 120,
+        "salle": "A218"
       }
     ],
     "nbPlace": 28,
@@ -62,7 +64,8 @@
         "numero": 1,
         "jour": "VE",
         "debutMinute": 840,
-        "dureeMinute": 120
+        "dureeMinute": 120,
+        "salle": "H010"
       }
     ],
     "nbPlace": 14,
@@ -85,7 +88,8 @@
         "numero": 1,
         "jour": "LU",
         "debutMinute": 840,
-        "dureeMinute": 120
+        "dureeMinute": 120,
+        "salle": "H010"
       }
     ],
     "nbPlace": 14,

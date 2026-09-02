@@ -16,7 +16,8 @@
         "numero": 1,
         "jour": "MA",
         "debutMinute": 840,
-        "dureeMinute": 120
+        "dureeMinute": 120,
+        "salle": "A216"
       }
     ],
     "nbPlace": 28,

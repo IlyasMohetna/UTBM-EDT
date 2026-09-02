@@ -39,6 +39,7 @@ export function parseUeFile(fileName, jsonText) {
         debut: seance.debutMinute,
         duree: seance.dureeMinute,
         nbPlace: entry.nbPlace ?? null,
+        salle: seance.salle ?? null,
       })
     }
   }

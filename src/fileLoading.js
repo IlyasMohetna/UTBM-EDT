@@ -121,3 +121,22 @@ export function loadStoredCalendarSettings() {
 export function saveCalendarSettings(settings) {
   localStorage.setItem(CALENDAR_KEY, JSON.stringify(settings))
 }
+
+const THEME_KEY = 'utbm-edt-theme'
+
+// Explicit light/dark choice from the toggle. Falls back to the OS/browser
+// preference only on a first visit, before anything has been saved.
+export function loadStoredTheme() {
+  try {
+    const stored = localStorage.getItem(THEME_KEY)
+    if (stored === 'light' || stored === 'dark') return stored
+  } catch {
+    // ignore
+  }
+  const prefersDark = typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches
+  return prefersDark ? 'dark' : 'light'
+}
+
+export function saveTheme(theme) {
+  localStorage.setItem(THEME_KEY, theme)
+}

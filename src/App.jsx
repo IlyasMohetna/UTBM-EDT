@@ -21,11 +21,13 @@ import {
   loadStoredCalendarSettings,
   loadStoredCombos,
   loadStoredExtraUes,
+  loadStoredTheme,
   makeId,
   saveActiveComboId,
   saveCalendarSettings,
   saveCombos,
   saveExtraUes,
+  saveTheme,
 } from './fileLoading.js'
 import HelpModal from './HelpModal.jsx'
 import IcsExportModal from './IcsExportModal.jsx'
@@ -70,6 +72,7 @@ export default function App() {
   const [importOpen, setImportOpen] = useState(false)
   const [statsOpen, setStatsOpen] = useState(false)
   const [calendarSettings, setCalendarSettings] = useState(loadStoredCalendarSettings)
+  const [theme, setTheme] = useState(loadStoredTheme)
   const filesInputRef = useRef(null)
   const dragCounter = useRef(0)
 
@@ -77,6 +80,10 @@ export default function App() {
   useEffect(() => saveCombos(combos), [combos])
   useEffect(() => saveActiveComboId(activeComboId), [activeComboId])
   useEffect(() => saveCalendarSettings(calendarSettings), [calendarSettings])
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    saveTheme(theme)
+  }, [theme])
 
   const catalog = useMemo(() => {
     const map = new Map(bundledUes.map((u) => [u.code, { ...u, source: 'bundled' }]))
@@ -203,6 +210,10 @@ export default function App() {
     })
   }
 
+  function toggleTheme() {
+    setTheme((t) => (t === 'light' ? 'dark' : 'light'))
+  }
+
   function addCombo() {
     const name = window.prompt('Nom de la nouvelle combinaison ?', `Combinaison ${combos.length + 1}`)
     if (name === null) return
@@ -306,6 +317,13 @@ export default function App() {
       <header className="topbar">
         <h1>Mon EDT UTBM</h1>
         <div className="topbar-actions">
+          <button
+            className="ghost help-btn"
+            onClick={toggleTheme}
+            title={theme === 'light' ? 'Passer en mode sombre' : 'Passer en mode clair'}
+          >
+            {theme === 'light' ? '🌙' : '☀️'}
+          </button>
           <button className="ghost help-btn" onClick={() => setHelpOpen(true)} title="Aide : semaines A/B, fréquence, groupes...">
             ?
           </button>
@@ -524,11 +542,14 @@ function SessionBlock({ s, startMin, weekTag, onTagWeek, room, onSetRoom }) {
   const width = 100 / s.totalLanes
   const left = width * s.lane
   const color = colorForUe(s.ueCode)
+  // A manually-set room (per combo) overrides the one baked into the data,
+  // so a wrong/changed room can always be corrected without editing JSON.
+  const effectiveRoom = room || s.salle
   const [editingRoom, setEditingRoom] = useState(false)
-  const [roomDraft, setRoomDraft] = useState(room ?? '')
+  const [roomDraft, setRoomDraft] = useState(effectiveRoom ?? '')
 
   function startEditingRoom() {
-    setRoomDraft(room ?? '')
+    setRoomDraft(effectiveRoom ?? '')
     setEditingRoom(true)
   }
 
@@ -571,9 +592,9 @@ function SessionBlock({ s, startMin, weekTag, onTagWeek, room, onSetRoom }) {
               if (e.key === 'Escape') setEditingRoom(false)
             }}
           />
-        ) : room ? (
+        ) : effectiveRoom ? (
           <button className="room-tag" onClick={startEditingRoom} title="Modifier la salle">
-            📍 {room}
+            📍 {effectiveRoom}
           </button>
         ) : (
           <button className="room-tag ghost-room" onClick={startEditingRoom}>

@@ -16,7 +16,8 @@
         "numero": 1,
         "jour": "JE",
         "debutMinute": 615,
-        "dureeMinute": 120
+        "dureeMinute": 120,
+        "salle": "A216"
       }
     ],
     "nbPlace": 56,

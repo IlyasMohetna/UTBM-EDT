@@ -91,7 +91,7 @@ export function generateIcs({ sessions, weekTags, rooms, startMonday, weekTypeAt
     const rrule = isF2
       ? `FREQ=WEEKLY;INTERVAL=2;BYDAY=${ICS_DAY[s.jour]};UNTIL=${untilStr}`
       : `FREQ=WEEKLY;BYDAY=${ICS_DAY[s.jour]};UNTIL=${untilStr}`
-    const room = rooms?.[s.key]
+    const room = rooms?.[s.key] || s.salle
 
     lines.push(
       'BEGIN:VEVENT',
