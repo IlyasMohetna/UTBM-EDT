@@ -390,8 +390,16 @@ button.ghost {
 
 .group-toggle {
   display: flex;
+  align-items: center;
   gap: 0.2rem;
   margin-left: 0.1rem;
+  padding-left: 0.3rem;
+  border-left: 1px solid var(--border);
+}
+
+.group-type-label {
+  font-size: 0.68rem;
+  font-weight: 700;
 }
 
 button.mini {

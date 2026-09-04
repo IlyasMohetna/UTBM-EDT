@@ -184,8 +184,13 @@ export default function App() {
     })
   }
 
-  function setGroup(ueCode, group) {
-    updateActiveCombo((c) => ({ ...c, groups: { ...c.groups, [ueCode]: group } }))
+  // A student can be in TD group 2 and TP group 1 of the same UE at once,
+  // so the group is keyed per UE *and* per activity type.
+  function setGroup(ueCode, type, group) {
+    updateActiveCombo((c) => ({
+      ...c,
+      groups: { ...c.groups, [ueCode]: { ...c.groups[ueCode], [type]: group } },
+    }))
   }
 
   function setWeekTag(sessionKey, tag) {
@@ -443,19 +448,26 @@ export default function App() {
                     <span className="ue-code">{ue.code}</span>
                     <span className="ue-check">{included ? '✓' : '+'}</span>
                   </button>
-                  {included && meta?.hasGroups && (
-                    <div className="group-toggle">
-                      {[1, 2].map((g) => (
-                        <button
-                          key={g}
-                          className={(activeCombo.groups[ue.code] ?? 1) === g ? 'mini active' : 'mini'}
-                          onClick={() => setGroup(ue.code, g)}
-                        >
-                          Gr.{g}
-                        </button>
+                  {included &&
+                    meta?.hasGroups &&
+                    [...meta.byType.entries()]
+                      .filter(([, variants]) => variants.size > 1)
+                      .map(([type]) => (
+                        <div className="group-toggle" key={type}>
+                          <span className="group-type-label" style={{ color: colorForType(type) }}>
+                            {type}
+                          </span>
+                          {[1, 2].map((g) => (
+                            <button
+                              key={g}
+                              className={(activeCombo.groups[ue.code]?.[type] ?? 1) === g ? 'mini active' : 'mini'}
+                              onClick={() => setGroup(ue.code, type, g)}
+                            >
+                              Gr.{g}
+                            </button>
+                          ))}
+                        </div>
                       ))}
-                    </div>
-                  )}
                   {ue.source === 'extra' && (
                     <button className="ue-remove" title="Retirer du catalogue" onClick={() => removeFromCatalog(ue.code)}>
                       🗑

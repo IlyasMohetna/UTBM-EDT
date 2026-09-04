@@ -76,12 +76,25 @@ export function emptyCombo(name) {
   return { id: makeId(), name, selectedCodes: [], groups: {}, weekTags: {}, rooms: {}, weekFilter: 'ALL' }
 }
 
+// Older saved combos keyed `groups` as { [ueCode]: number } — one group for
+// the whole UE. Real UTBM schedules can put a student in TD group 2 and TP
+// group 1 of the same UE, so it's now { [ueCode]: { [type]: number } }.
+// Replicate the old single number across CM/TD/TP so nothing visibly
+// changes on upgrade; the user can then split it per type as needed.
+function migrateGroups(groups) {
+  const out = {}
+  for (const [ueCode, value] of Object.entries(groups ?? {})) {
+    out[ueCode] = typeof value === 'number' ? { CM: value, TD: value, TP: value } : value
+  }
+  return out
+}
+
 export function loadStoredCombos() {
   try {
     const raw = localStorage.getItem(COMBOS_KEY)
     const combos = raw ? JSON.parse(raw) : []
     // Older saved combos predate the `rooms` field — backfill it.
-    const normalized = combos.map((c) => ({ rooms: {}, ...c }))
+    const normalized = combos.map((c) => ({ rooms: {}, ...c, groups: migrateGroups(c.groups) }))
     return normalized.length ? normalized : [emptyCombo('Mon EDT')]
   } catch {
     return [emptyCombo('Mon EDT')]

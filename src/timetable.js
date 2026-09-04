@@ -135,15 +135,23 @@ export function analyzeUe(ue) {
   return { byType, hasGroups, f2Keys }
 }
 
-// Sessions to actually render, given the group chosen per UE and the week filter.
+// The group chosen for one activity type within one UE — a student can be
+// in TD group 2 and TP group 1 of the same UE at once, so this is never a
+// single number per UE.
+function groupFor(settings, ueCode, type) {
+  const perUe = settings.groups[ueCode]
+  if (typeof perUe === 'number') return perUe // legacy shape, pre-migration
+  return perUe?.[type] ?? 1
+}
+
+// Sessions to actually render, given the group chosen per UE+type and the week filter.
 export function computeVisibleSessions(ues, settings) {
   const result = []
   for (const ue of ues) {
     const { byType } = analyzeUe(ue)
-    const group = settings.groups[ue.code] ?? 1
     for (const s of ue.sessions) {
       const variants = byType.get(s.type)
-      if (variants && variants.size > 1 && s.numero !== group) continue
+      if (variants && variants.size > 1 && s.numero !== groupFor(settings, ue.code, s.type)) continue
       if (s.frequence === 'F2' && settings.weekFilter !== 'ALL') {
         const tag = settings.weekTags[s.key]
         if (tag && tag !== settings.weekFilter) continue
@@ -159,11 +167,10 @@ export function countUnresolvedF2(ues, settings) {
   let count = 0
   for (const ue of ues) {
     const { byType } = analyzeUe(ue)
-    const group = settings.groups[ue.code] ?? 1
     for (const s of ue.sessions) {
       if (s.frequence !== 'F2') continue
       const variants = byType.get(s.type)
-      if (variants && variants.size > 1 && s.numero !== group) continue
+      if (variants && variants.size > 1 && s.numero !== groupFor(settings, ue.code, s.type)) continue
       if (!settings.weekTags[s.key]) count++
     }
   }
