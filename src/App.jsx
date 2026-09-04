@@ -32,6 +32,7 @@ import {
 import HelpModal from './HelpModal.jsx'
 import IcsExportModal from './IcsExportModal.jsx'
 import ImportModal from './ImportModal.jsx'
+import BuildEdtModal from './BuildEdtModal.jsx'
 
 const PX_PER_MIN = 1.1
 const DEFAULT_START = 8 * 60
@@ -70,6 +71,7 @@ export default function App() {
   const [helpOpen, setHelpOpen] = useState(false)
   const [icsOpen, setIcsOpen] = useState(false)
   const [importOpen, setImportOpen] = useState(false)
+  const [buildOpen, setBuildOpen] = useState(false)
   const [statsOpen, setStatsOpen] = useState(false)
   const [calendarSettings, setCalendarSettings] = useState(loadStoredCalendarSettings)
   const [theme, setTheme] = useState(loadStoredTheme)
@@ -219,6 +221,18 @@ export default function App() {
     setTheme((t) => (t === 'light' ? 'dark' : 'light'))
   }
 
+  // Rebuilds the active combo's selection/groups/weekTags/rooms from a
+  // pasted personal-schedule table — a full replace, not a merge.
+  function applyBuiltCombo(built) {
+    updateActiveCombo((c) => ({
+      ...c,
+      selectedCodes: built.selectedCodes,
+      groups: built.groups,
+      weekTags: built.weekTags,
+      rooms: built.rooms,
+    }))
+  }
+
   function addCombo() {
     const name = window.prompt('Nom de la nouvelle combinaison ?', `Combinaison ${combos.length + 1}`)
     if (name === null) return
@@ -335,6 +349,15 @@ export default function App() {
           {ues.length > 0 && (
             <button className="ghost" onClick={() => setIcsOpen(true)}>
               📅 Exporter iCal
+            </button>
+          )}
+          {catalog.length > 0 && (
+            <button
+              className="ghost"
+              onClick={() => setBuildOpen(true)}
+              title="Coller ton EDT personnel pour construire automatiquement la combinaison active"
+            >
+              🛠️ Construire mon EDT
             </button>
           )}
           <button
@@ -544,6 +567,14 @@ export default function App() {
         />
       )}
       {statsOpen && <StatsSlideover onClose={() => setStatsOpen(false)} stats={stats} comboName={activeCombo.name} />}
+      {buildOpen && (
+        <BuildEdtModal
+          onClose={() => setBuildOpen(false)}
+          catalog={catalog}
+          comboName={activeCombo.name}
+          onBuild={applyBuiltCombo}
+        />
+      )}
     </div>
   )
 }
