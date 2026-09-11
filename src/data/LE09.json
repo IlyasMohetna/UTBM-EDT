@@ -1,25 +1,48 @@
 [
-  {
-    "activite": {
-      "id": 46,
-      "libelleCourt": "TD",
-      "libelle": "Travaux dirigés"
+    {
+        "activite": {
+            "id": 46,
+            "libelleCourt": "TD",
+            "libelle": "Travaux dirigés"
+        },
+        "effectif": 22,
+        "effectifA": 0,
+        "effectifB": 0,
+        "frequence": "F1",
+        "id": 15034,
+        "listeSeance": [
+            {
+                "id": 14980,
+                "numero": 1,
+                "jour": "MA",
+                "debutMinute": 615,
+                "dureeMinute": 120
+            }
+        ],
+        "nbPlace": 28,
+        "numero": 2
     },
-    "effectif": 0,
-    "effectifA": 0,
-    "effectifB": 0,
-    "frequence": "F1",
-    "id": 14708,
-    "listeSeance": [
-      {
-        "id": 14638,
-        "numero": 1,
-        "jour": "VE",
-        "debutMinute": 840,
-        "dureeMinute": 120
-      }
-    ],
-    "nbPlace": 28,
-    "numero": 1
-  }
+    {
+        "activite": {
+            "id": 46,
+            "libelleCourt": "TD",
+            "libelle": "Travaux dirigés"
+        },
+        "effectif": 24,
+        "effectifA": 0,
+        "effectifB": 0,
+        "frequence": "F1",
+        "id": 14708,
+        "listeSeance": [
+            {
+                "id": 14638,
+                "numero": 1,
+                "jour": "VE",
+                "debutMinute": 840,
+                "dureeMinute": 120
+            }
+        ],
+        "nbPlace": 28,
+        "numero": 1
+    }
 ]
