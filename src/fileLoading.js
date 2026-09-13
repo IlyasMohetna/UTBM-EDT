@@ -120,14 +120,20 @@ export function saveActiveComboId(id) {
 const CALENDAR_KEY = 'utbm-edt-calendar-settings'
 
 // The real semester calendar (needed to turn "toutes les semaines" / "une
-// semaine sur deux" into actual dates for the .ics export). Same for every
-// combo, so it's stored on its own rather than per-combo.
+// semaine sur deux" into actual dates for the .ics export, and to know
+// whether the current week is A or B). Same for every combo, so it's
+// stored on its own rather than per-combo.
+// Any confirmed (monday, A/B) pair anchors the whole alternation, so the
+// default below is simply the most recent one confirmed: the week starting
+// Monday 2026-09-14 is a "semaine B".
+const DEFAULT_CALENDAR_SETTINGS = { startMonday: '2026-09-14', weekTypeAtStart: 'B', endDate: '' }
+
 export function loadStoredCalendarSettings() {
   try {
     const raw = localStorage.getItem(CALENDAR_KEY)
-    return raw ? JSON.parse(raw) : { startMonday: '', weekTypeAtStart: 'A', endDate: '' }
+    return raw ? { ...DEFAULT_CALENDAR_SETTINGS, ...JSON.parse(raw) } : { ...DEFAULT_CALENDAR_SETTINGS }
   } catch {
-    return { startMonday: '', weekTypeAtStart: 'A', endDate: '' }
+    return { ...DEFAULT_CALENDAR_SETTINGS }
   }
 }
 

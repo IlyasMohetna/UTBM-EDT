@@ -33,6 +33,7 @@ import HelpModal from './HelpModal.jsx'
 import IcsExportModal from './IcsExportModal.jsx'
 import ImportModal from './ImportModal.jsx'
 import BuildEdtModal from './BuildEdtModal.jsx'
+import { computeCurrentWeekType } from './ics.js'
 
 const PX_PER_MIN = 1.1
 const DEFAULT_START = 8 * 60
@@ -86,6 +87,8 @@ export default function App() {
     document.documentElement.dataset.theme = theme
     saveTheme(theme)
   }, [theme])
+
+  const currentWeekType = useMemo(() => computeCurrentWeekType(calendarSettings), [calendarSettings])
 
   const catalog = useMemo(() => {
     const map = new Map(bundledUes.map((u) => [u.code, { ...u, source: 'bundled' }]))
@@ -334,7 +337,22 @@ export default function App() {
       )}
 
       <header className="topbar">
-        <h1>Mon EDT UTBM</h1>
+        <div className="topbar-title">
+          <h1>Mon EDT UTBM</h1>
+          {currentWeekType ? (
+            <button
+              className={`week-badge week-${currentWeekType}`}
+              onClick={() => setIcsOpen(true)}
+              title="Basé sur la référence calendrier — clique pour l'ajuster (dans Exporter iCal)"
+            >
+              Semaine {currentWeekType}
+            </button>
+          ) : (
+            <button className="week-badge week-unset" onClick={() => setIcsOpen(true)}>
+              Définir la semaine A/B
+            </button>
+          )}
+        </div>
         <div className="topbar-actions">
           <button
             className="ghost help-btn"

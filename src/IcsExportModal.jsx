@@ -15,6 +15,13 @@ export default function IcsExportModal({ onClose, sessions, weekTags, rooms, com
     return () => window.removeEventListener('keydown', onKey)
   }, [onClose])
 
+  // Persist as soon as it's edited (not just on export) so the "semaine
+  // actuelle" badge in the header reflects it right away.
+  useEffect(() => {
+    onSaveSettings({ startMonday, weekTypeAtStart, endDate })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [startMonday, weekTypeAtStart, endDate])
+
   function handleStartChange(value) {
     setStartMonday(value)
     if (value && !endDate) setEndDate(addWeeks(value, 16))
@@ -25,7 +32,6 @@ export default function IcsExportModal({ onClose, sessions, weekTags, rooms, com
   const ready = Boolean(startMonday) && Boolean(endDate)
 
   function handleExport() {
-    onSaveSettings({ startMonday, weekTypeAtStart, endDate })
     const { ics, skippedCount } = generateIcs({
       sessions,
       weekTags,

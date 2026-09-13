@@ -130,3 +130,23 @@ export function addWeeks(dateStr, weeks) {
   d.setDate(d.getDate() + weeks * 7)
   return d.toISOString().slice(0, 10)
 }
+
+function mondayOf(date) {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const offsetFromMonday = (d.getDay() + 6) % 7 // Sunday=0 -> 6, Monday=1 -> 0, ...
+  d.setDate(d.getDate() - offsetFromMonday)
+  return d
+}
+
+// A/B alternates every week, anchored on one known (monday, letter) pair —
+// any such pair works, it doesn't have to be the very first week of term.
+export function computeCurrentWeekType({ startMonday, weekTypeAtStart }, referenceDate = new Date()) {
+  if (!startMonday || (weekTypeAtStart !== 'A' && weekTypeAtStart !== 'B')) return null
+  const anchorMonday = mondayOf(new Date(startMonday))
+  const currentMonday = mondayOf(referenceDate)
+  const diffWeeks = Math.round((currentMonday - anchorMonday) / (7 * 86400000))
+  const flips = ((diffWeeks % 2) + 2) % 2
+  const types = ['A', 'B']
+  const anchorIdx = types.indexOf(weekTypeAtStart)
+  return types[(anchorIdx + flips) % 2]
+}

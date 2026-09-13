@@ -81,9 +81,41 @@ body {
   gap: 0.75rem;
 }
 
+.topbar-title {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
 .topbar h1 {
   font-size: 1.3rem;
   margin: 0;
+}
+
+.week-badge {
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.week-badge.week-A {
+  background: color-mix(in srgb, #2f9e44 18%, var(--panel));
+  border-color: #2f9e44;
+  color: #2f9e44;
+}
+
+.week-badge.week-B {
+  background: color-mix(in srgb, #d9720b 18%, var(--panel));
+  border-color: #d9720b;
+  color: #d9720b;
+}
+
+.week-badge.week-unset {
+  color: var(--text-dim);
+  border-style: dashed;
+  font-weight: 500;
 }
 
 .topbar-actions {
