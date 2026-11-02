@@ -33,7 +33,7 @@ import HelpModal from './HelpModal.jsx'
 import IcsExportModal from './IcsExportModal.jsx'
 import ImportModal from './ImportModal.jsx'
 import BuildEdtModal from './BuildEdtModal.jsx'
-import { computeCurrentWeekType } from './ics.js'
+import { computeCurrentWeekType, isOnBreak } from './ics.js'
 
 const PX_PER_MIN = 1.1
 const DEFAULT_START = 8 * 60
@@ -347,6 +347,8 @@ export default function App() {
             >
               Semaine {currentWeekType}
             </button>
+          ) : isOnBreak() ? (
+            <span className="week-badge week-unset">Vacances</span>
           ) : (
             <button className="week-badge week-unset" onClick={() => setIcsOpen(true)}>
               Définir la semaine A/B

@@ -50,19 +50,59 @@ function foldLine(line) {
   return parts.join('\r\n ')
 }
 
-// Builds a .ics string for the given sessions.
-// - F1 sessions recur every week.
-// - F2 sessions recur every 2 weeks, anchored so they land on weeks tagged
-//   with the matching A/B letter (relative to `weekTypeAtStart`, the letter
-//   of the very first week of `startMonday`). F2 sessions with no A/B tag
-//   yet are skipped (counted in `skippedCount`) since we can't place them.
+// Mondays of weeks without any class (vacances). The UTBM does not give them
+// an A/B letter, so the alternation must skip them instead of counting them.
+export const BREAK_WEEKS = [
+  '2026-10-26', // Toussaint
+  '2026-12-21', // Noël (1/2)
+  '2026-12-28', // Noël (2/2)
+]
+
+function isoDay(date) {
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+}
+
+function isBreakWeek(monday) {
+  return BREAK_WEEKS.includes(isoDay(monday))
+}
+
+export function isOnBreak(referenceDate = new Date()) {
+  return isBreakWeek(mondayOf(referenceDate))
+}
+
+// Signed number of teaching weeks (break weeks excluded) from anchorMonday to
+// monday. Used to get the A/B parity of any week relative to the anchor.
+function teachingWeeksBetween(anchorMonday, monday) {
+  const weeks = Math.round((monday - anchorMonday) / (7 * 86400000))
+  const step = weeks >= 0 ? 1 : -1
+  let count = 0
+  for (let i = 1; i <= Math.abs(weeks); i++) {
+    // Going forward we count the week we land on; going backward, the week we leave.
+    const w = step > 0 ? addDays(anchorMonday, i * 7) : addDays(anchorMonday, (1 - i) * 7)
+    if (!isBreakWeek(w)) count += step
+  }
+  return count
+}
+
+function letterAt(anchorMonday, anchorLetter, monday) {
+  const flips = ((teachingWeeksBetween(anchorMonday, monday) % 2) + 2) % 2
+  return flips === 0 ? anchorLetter : anchorLetter === 'A' ? 'B' : 'A'
+}
+
+// Builds a .ics string for the given sessions, one VEVENT per occurrence.
+// - F1 sessions occur every teaching week.
+// - F2 sessions occur on teaching weeks whose A/B letter matches their tag.
+//   The letter alternates every teaching week anchored on `startMonday` =
+//   `weekTypeAtStart`; BREAK_WEEKS are skipped and don't advance the
+//   alternation. F2 sessions with no A/B tag yet are skipped (counted in
+//   `skippedCount`) since we can't place them.
 export function generateIcs({ sessions, weekTags, rooms, startMonday, weekTypeAtStart, endDate, calendarName }) {
   const lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//UTBM-EDT//FR', 'CALSCALE:GREGORIAN']
   lines.push(`X-WR-CALNAME:${escapeIcs(calendarName)}`)
 
-  const start = new Date(startMonday)
+  const start = mondayOf(new Date(startMonday))
   const until = new Date(endDate)
-  const untilStr = formatIcsDateTime(until, 23 * 60 + 59)
+  until.setHours(23, 59, 59, 0)
   const dtstamp = nowStampUtc()
 
   let skippedCount = 0
@@ -73,54 +113,36 @@ export function generateIcs({ sessions, weekTags, rooms, startMonday, weekTypeAt
     if (dayOffset === undefined) continue
 
     const isF2 = s.frequence === 'F2'
-    let weekParityOffset = 0
-    let weekNote = ''
-    if (isF2) {
-      const tag = weekTags[s.key]
-      if (!tag) {
-        skippedCount++
-        continue
-      }
-      weekParityOffset = tag === weekTypeAtStart ? 0 : 1
-      weekNote = ` — Semaine ${tag} (une semaine sur deux)`
+    const tag = isF2 ? weekTags[s.key] : null
+    if (isF2 && !tag) {
+      skippedCount++
+      continue
     }
-
-    const firstOccurrence = addDays(start, dayOffset + weekParityOffset * 7)
-    const dtStart = formatIcsDateTime(firstOccurrence, s.debut)
-    const dtEnd = formatIcsDateTime(firstOccurrence, s.debut + s.duree)
-    const rrule = isF2
-      ? `FREQ=WEEKLY;INTERVAL=2;BYDAY=${ICS_DAY[s.jour]};UNTIL=${untilStr}`
-      : `FREQ=WEEKLY;BYDAY=${ICS_DAY[s.jour]};UNTIL=${untilStr}`
+    const weekNote = isF2 ? ` — Semaine ${tag} (une semaine sur deux)` : ''
     const room = rooms?.[s.key] || s.salle
 
-    lines.push(
-      'BEGIN:VEVENT',
-      `UID:${index++}-${s.key}@utbm-edt`,
-      `DTSTAMP:${dtstamp}`,
-      `DTSTART:${dtStart}`,
-      `DTEND:${dtEnd}`,
-      `RRULE:${rrule}`,
-      `SUMMARY:${escapeIcs(`${s.ueCode} ${s.type}`)}`,
-      `DESCRIPTION:${escapeIcs(`${s.typeLabel}${weekNote}`)}`,
-    )
-    if (room) lines.push(`LOCATION:${escapeIcs(room)}`)
-    lines.push('END:VEVENT')
+    for (let monday = start; ; monday = addDays(monday, 7)) {
+      const day = addDays(monday, dayOffset)
+      if (day > until) break
+      if (isBreakWeek(monday)) continue
+      if (isF2 && letterAt(start, weekTypeAtStart, monday) !== tag) continue
+
+      lines.push(
+        'BEGIN:VEVENT',
+        `UID:${index++}-${s.key}@utbm-edt`,
+        `DTSTAMP:${dtstamp}`,
+        `DTSTART:${formatIcsDateTime(day, s.debut)}`,
+        `DTEND:${formatIcsDateTime(day, s.debut + s.duree)}`,
+        `SUMMARY:${escapeIcs(`${s.ueCode} ${s.type}`)}`,
+        `DESCRIPTION:${escapeIcs(`${s.typeLabel}${weekNote}`)}`,
+      )
+      if (room) lines.push(`LOCATION:${escapeIcs(room)}`)
+      lines.push('END:VEVENT')
+    }
   }
 
   lines.push('END:VCALENDAR')
   return { ics: lines.map(foldLine).join('\r\n'), skippedCount }
-}
-
-export function downloadIcs(icsText, filename) {
-  const blob = new Blob([icsText], { type: 'text/calendar;charset=utf-8' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = filename
-  document.body.appendChild(a)
-  a.click()
-  a.remove()
-  URL.revokeObjectURL(url)
 }
 
 // Default semester length used to pre-fill the end date when only the start
@@ -138,15 +160,12 @@ function mondayOf(date) {
   return d
 }
 
-// A/B alternates every week, anchored on one known (monday, letter) pair —
-// any such pair works, it doesn't have to be the very first week of term.
+// A/B alternates every teaching week (BREAK_WEEKS excluded), anchored on one
+// known (monday, letter) pair — any such pair works, it doesn't have to be the
+// very first week of term. Returns null during a break week.
 export function computeCurrentWeekType({ startMonday, weekTypeAtStart }, referenceDate = new Date()) {
   if (!startMonday || (weekTypeAtStart !== 'A' && weekTypeAtStart !== 'B')) return null
-  const anchorMonday = mondayOf(new Date(startMonday))
   const currentMonday = mondayOf(referenceDate)
-  const diffWeeks = Math.round((currentMonday - anchorMonday) / (7 * 86400000))
-  const flips = ((diffWeeks % 2) + 2) % 2
-  const types = ['A', 'B']
-  const anchorIdx = types.indexOf(weekTypeAtStart)
-  return types[(anchorIdx + flips) % 2]
+  if (isBreakWeek(currentMonday)) return null
+  return letterAt(mondayOf(new Date(startMonday)), weekTypeAtStart, currentMonday)
 }
