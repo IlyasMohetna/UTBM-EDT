@@ -31,6 +31,7 @@ import {
 } from './fileLoading.js'
 import HelpModal from './HelpModal.jsx'
 import IcsExportModal from './IcsExportModal.jsx'
+import WeekCalendarModal from './WeekCalendarModal.jsx'
 import ImportModal from './ImportModal.jsx'
 import BuildEdtModal from './BuildEdtModal.jsx'
 import { computeCurrentWeekType, isOnBreak } from './ics.js'
@@ -71,6 +72,7 @@ export default function App() {
   const [error, setError] = useState(null)
   const [helpOpen, setHelpOpen] = useState(false)
   const [icsOpen, setIcsOpen] = useState(false)
+  const [weekCalOpen, setWeekCalOpen] = useState(false)
   const [importOpen, setImportOpen] = useState(false)
   const [buildOpen, setBuildOpen] = useState(false)
   const [statsOpen, setStatsOpen] = useState(false)
@@ -342,13 +344,15 @@ export default function App() {
           {currentWeekType ? (
             <button
               className={`week-badge week-${currentWeekType}`}
-              onClick={() => setIcsOpen(true)}
-              title="Basé sur la référence calendrier — clique pour l'ajuster (dans Exporter iCal)"
+              onClick={() => setWeekCalOpen(true)}
+              title="Voir le calendrier des semaines A/B"
             >
               Semaine {currentWeekType}
             </button>
           ) : isOnBreak() ? (
-            <span className="week-badge week-unset">Vacances</span>
+            <button className="week-badge week-unset" onClick={() => setWeekCalOpen(true)}>
+              Vacances
+            </button>
           ) : (
             <button className="week-badge week-unset" onClick={() => setIcsOpen(true)}>
               Définir la semaine A/B
@@ -568,6 +572,16 @@ export default function App() {
       )}
 
       {helpOpen && <HelpModal onClose={() => setHelpOpen(false)} />}
+      {weekCalOpen && (
+        <WeekCalendarModal
+          onClose={() => setWeekCalOpen(false)}
+          calendarSettings={calendarSettings}
+          onEditReference={() => {
+            setWeekCalOpen(false)
+            setIcsOpen(true)
+          }}
+        />
+      )}
       {icsOpen && (
         <IcsExportModal
           onClose={() => setIcsOpen(false)}

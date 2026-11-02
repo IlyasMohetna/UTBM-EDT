@@ -983,3 +983,85 @@ button:disabled {
   color: var(--text-dim);
   margin-left: auto;
 }
+
+/* Calendrier des semaines A/B */
+.cal-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: 2.6rem repeat(7, 1fr);
+  gap: 0.2rem;
+  font-size: 0.85rem;
+}
+
+.cal-head {
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  padding-bottom: 0.2rem;
+}
+
+.cal-row {
+  display: contents;
+}
+
+.cal-row > span {
+  text-align: center;
+  padding: 0.4rem 0;
+  border-radius: 6px;
+}
+
+.cal-week-tag {
+  font-weight: 700;
+  font-size: 0.78rem;
+}
+
+.cal-A > span,
+.cal-key.cal-A {
+  background: color-mix(in srgb, #2f9e44 18%, var(--panel));
+  color: #2f9e44;
+}
+
+.cal-B > span,
+.cal-key.cal-B {
+  background: color-mix(in srgb, #d9720b 18%, var(--panel));
+  color: #d9720b;
+}
+
+.cal-break > span,
+.cal-key.cal-break {
+  background: color-mix(in srgb, var(--text-dim) 15%, var(--panel));
+  color: var(--text-dim);
+}
+
+.cal-row > .cal-day {
+  color: var(--text);
+}
+
+.cal-row > .cal-out {
+  opacity: 0.35;
+}
+
+.cal-row > .cal-today {
+  outline: 2px solid var(--accent);
+  font-weight: 700;
+}
+
+.cal-legend {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin: 0.8rem 0;
+}
+
+.cal-key {
+  border-radius: 999px;
+  padding: 0.2rem 0.7rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
